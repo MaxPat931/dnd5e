@@ -75,6 +75,17 @@
                 </label>
                 {{/each}}
             </div>
+            
+            {{!-- Class Lists MAXPAT --}}
+            <div class="form-group stacked">
+                <label>{{ localize "DND5E.SpellClassList" }}</label>
+                {{#each spellClassList as |spellclasslist key|}}
+                <label class="checkbox">
+                    <input type="checkbox" name="system.spellclasslist.{{key}}" {{checked (lookup ../system.spellclasslist key)}}>
+                    {{spellclasslist.label}}
+                </label>
+                {{/each}}
+            </div>
 
             {{!-- Material Components --}}
             <div class="form-group stacked">
