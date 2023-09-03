@@ -12039,11 +12039,13 @@ class Item5e extends Item {
     const scrollIntroEnd = scrollDescription.indexOf(pdel);
     const scrollIntro = scrollDescription.slice(0, scrollIntroEnd + pdel.length);
     const scrollDetails = scrollDescription.slice(scrollIntroEnd + pdel.length);
+    const scrollClasses = Object.keys(itemData.system.spellclasses).filter((key) => itemData.system.spellclasses[key]).map((key) => CONFIG.DND5E.spellClassList[key]?.label); ///MAXPAT
 
     // Create a composite description from the scroll description and the spell details
     const desc = scrollIntro
     + `<hr><h3>${itemData.name} (${game.i18n.format("DND5E.LevelNumber", {level})})</h3>`
     + (components.concentration ? `<p><em>${game.i18n.localize("DND5E.ScrollRequiresConcentration")}</em></p>` : "")
+    + (scrollClasses.length > 0 ? `<p>${selectedSpellClasses.join(', ')}</p>` : "") ///MAXPAT
     + `<hr>${description.value}<hr>`
     + `<h3>${game.i18n.localize("DND5E.ScrollDetails")}</h3><hr>${scrollDetails}`;
 
