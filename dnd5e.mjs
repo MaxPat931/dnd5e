@@ -17591,6 +17591,9 @@ class ItemSheet5e extends ItemSheet {
         break;
       case "spell":
         props.push(labels.components.vsm, labels.materials, ...labels.components.tags, labels.spellclasslist);
+        ///MAXPAT
+          for ( const [k, v] of Object.entries(this.item.system.spellclasses) ) {
+          if ( v === true ) props.push(CONFIG.DND5E.spellClassList[k].label);
         break;
       case "weapon":
         for ( const [k, v] of Object.entries(this.item.system.properties) ) {
