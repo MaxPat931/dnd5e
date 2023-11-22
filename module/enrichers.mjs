@@ -7,7 +7,7 @@ import * as Trait from "./documents/actor/trait.mjs";
  */
 export function registerCustomEnrichers() {
   CONFIG.TextEditor.enrichers.push({
-    pattern: /\[\[\/(?<type>check|damage|save|skill|tool) (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
+    pattern: /\[\[\/(?<type>check|damage|save|skill|tool|status) (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
     enricher: enrichString
   });
 
@@ -33,6 +33,7 @@ async function enrichString(match, options) {
     case "skill":
     case "tool": return enrichCheck(config, label, options);
     case "save": return enrichSave(config, label, options);
+    case "status": return enrichStatus(config, label);
   }
   return match.input;
 }
@@ -306,6 +307,36 @@ async function enrichSave(config, label, options) {
 }
 
 /* -------------------------------------------- */
+/**
+ * Enrich an Status link to toggle a status on the selected token. 
+ * @param {string[]} config            Configuration data.
+ * @param {string} [label]             Optional label to replace default text.
+ *
+ * @example Toggle the diseased status:
+ * ```[[/status diseased]]```
+ * becomes
+ * ```html
+ * <a class="roll-action" data-type="item">
+ *   <i class="fa-solid fa-dice-d20"></i> diseased
+ * </a>
+ * ```
+*/
+
+async function enrichStatus(config, label) {
+  const givenStatus = config.values.join(' ');
+  if ( !label ) {
+    label = givenStatus;}
+
+    const statusConfig = CONFIG.statusEffects.find(e => e.id === givenStatus.toLowerCase());
+    if ( !statusConfig ) {
+        console.warn(`Status ${givenStatus} not found while enriching ${config.input}.`);
+        return config.input;
+    }
+
+    return createRollLink(label, { type: "status", toggleStatus: givenStatus, ...config });
+  }
+
+/* -------------------------------------------- */
 
 /**
  * Add a dataset object to the provided element.
@@ -392,6 +423,11 @@ function rollAction(event) {
     case "tool":
       options.ability = ability;
       return actor.rollToolCheck(tool, options);
+    case "status":
+      for (let token of canvas.tokens.controlled){
+          token.toggleEffect(CONFIG.statusEffects.find(e => e.id === target.dataset.toggleStatus.toLowerCase()));
+        }
+      break;
     default:
       return console.warn(`DnD5e | Unknown roll type ${type} provided.`);
   }
