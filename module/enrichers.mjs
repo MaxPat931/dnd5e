@@ -378,7 +378,31 @@ function createRollLink(label, dataset) {
   const link = document.createElement("a");
   link.classList.add("roll-link");
   _addDataset(link, dataset);
-  link.innerHTML = `<i class="fa-solid fa-dice-d20"></i> ${label}`;
+  if (dataset.type) {
+    const {type} = dataset;
+
+    switch (type) {
+      case "skill":
+      case "check":
+        link.innerHTML = `<i class="fa-solid fa-user-check"></i> ${label}`;
+        break;
+      case "damage":
+        link.innerHTML = `<i class="fa-solid fa-person-falling-burst"></i> ${label}`;
+        break;
+      case "save":
+        link.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${label}`; //fa-floppydisk
+        break;
+      case "tool":
+        link.innerHTML = `<i class="fa-solid fa-toolbox"></i> ${label}`;
+        break;
+      case "item":
+        link.innerHTML = `<i class="fa-solid fa-dice-d20"></i> ${label}`;
+        break;
+      case "status":
+        link.innerHTML = `<i class="fa-solid fa-person-rays"></i> ${label}`;
+        break;
+  }
+}
   return link;
 }
 
