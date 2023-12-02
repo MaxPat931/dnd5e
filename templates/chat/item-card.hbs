@@ -8,8 +8,10 @@
     <div class="card-content">
         {{#if data.description.chat}}
             {{{data.description.chat}}}
-        {{else}}
+        {{else if data.identified}}
             {{{data.description.value}}}
+        {{else}}
+            {{{data.description.unidentified}}}
         {{/if}}
         {{#if data.materials.value}}
         <p><strong>{{ localize "DND5E.RequiredMaterials" }}.</strong> {{data.materials.value}}</p>
