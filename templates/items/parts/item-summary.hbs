@@ -1,6 +1,10 @@
 <div class="item-summary">
-  {{{description.value}}}
-  
+  {{#if identified}}
+    {{{description.value}}}<hr>{{{description.chat}}}
+  {{else}}
+    {{{description.unidentified}}}<hr>{{{description.chat}}}
+  {{/if}}
+
   <div class="item-properties">
     {{#each properties}}<span class="tag">{{this}}</span>{{/each}}
   </div>
