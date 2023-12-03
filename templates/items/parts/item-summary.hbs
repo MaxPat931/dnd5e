@@ -1,8 +1,14 @@
 <div class="item-summary">
   {{#if identified}}
-    {{{description.value}}}<hr>{{{description.chat}}}
+    {{{description.value}}}
+        {{#if description.chat}}
+        <hr>{{{description.chat}}}
+        {{/if}}
   {{else}}
-    {{{description.unidentified}}}<hr>{{{description.chat}}}
+    {{{description.unidentified}}}
+      {{#if description.chat}}
+        <hr>{{{description.chat}}}
+        {{/if}}
   {{/if}}
 
   <div class="item-properties">
