@@ -80,3 +80,22 @@ The formula can also include formula values that will be evaluated before the da
 
 > [!Note]
 > Any values entered in the formula will be resolved based on the stats of the owner of the item, not who ultimately performs the roll.
+
+## Item Enrichers
+Item enrichers allow you to use an item from an enriched link. There are several different methods to create an Item enricher, which will determine how the item is used:  
+By Item Name:  
+`[[/item Bite]]`  
+This functions similarly to a system macro, as if you have dragged that item to the macro hotbar. When clicked on it will check for a selected token, or your assigned actor, if a the found token or actor has an item of a matching name, it will be used, if the found token or actor does not have an item of that name, a warning will be displayed.  
+
+By UUID:  
+`[[/item Actor.Adult Black Dragon.Item.Bite]]`  
+`[[/item Actor.p26xCjCCTQm5fRN3.Item.amUUCouL69OK1GZU]]`  
+`[[/item Actor.Adult Black Dragon.Item.amUUCouL69OK1GZU]]`  
+`[[/item Actor.p26xCjCCTQm5fRN3.Item.Bite]]`  
+A UUID contains references to an Actor and an Item it owns, either can be specified by Id or by Name. When clicked on, the enricher will find the specified Actor and use the specified Item.  
+
+By Relative ID:  
+`[[/item amUUCouL69OK1GZU]]`  
+`[[/item .amUUCouL69OK1GZU]]`  
+`[[/item .Bite]]`  
+A Relative ID can contain a reference to an owned Item either by an Id, a relative Id (note the preceding `.`), or by name (again, note the preceding `.`). When clicked on the enricher will use its location (either in an Actor Sheet, Item Sheet, or Chat Card) to determine the Token or Actor that owns that card or sheet to use the specified item from that owner.
