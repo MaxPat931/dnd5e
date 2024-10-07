@@ -1752,6 +1752,7 @@ DND5E.validProperties = {
     "weightlessContents"
   ]),
   equipment: new Set([
+    "ada",
     "mgc",
     "stealthDisadvantage"
   ]),
@@ -2955,6 +2956,7 @@ DND5E.consumableResources = [
  * @property {string} [exclusiveGroup]  Any status effects with the same group will not be able to be applied at the
  *                                      same time through the token HUD (multiple statuses applied through other
  *                                      effects can still coexist).
+ * @property {number} [coverBonus]      A bonus this condition provides to AC and dexterity saving throws.
  */
 
 /**
@@ -3161,13 +3163,15 @@ DND5E.statusEffects = {
     name: "EFFECT.DND5E.StatusHalfCover",
     icon: "systems/dnd5e/icons/svg/statuses/cover-half.svg",
     order: 2,
-    exclusiveGroup: "cover"
+    exclusiveGroup: "cover",
+    coverBonus: 2
   },
   coverThreeQuarters: {
     name: "EFFECT.DND5E.StatusThreeQuartersCover",
     icon: "systems/dnd5e/icons/svg/statuses/cover-three-quarters.svg",
     order: 3,
-    exclusiveGroup: "cover"
+    exclusiveGroup: "cover",
+    coverBonus: 5
   },
   coverTotal: {
     name: "EFFECT.DND5E.StatusTotalCover",

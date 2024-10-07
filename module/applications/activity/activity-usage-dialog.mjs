@@ -14,6 +14,8 @@ export default class ActivityUsageDialog extends Dialog5e {
     this.#config = options.config;
   }
 
+  /* -------------------------------------------- */
+
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["activity-usage"],
@@ -37,6 +39,8 @@ export default class ActivityUsageDialog extends Dialog5e {
       width: 420
     }
   };
+
+  /* -------------------------------------------- */
 
   /** @override */
   static PARTS = {
@@ -324,6 +328,7 @@ export default class ActivityUsageDialog extends Dialog5e {
       const maximumLevel = Object.values(this.actor.system.spells)
         .reduce((max, d) => d.max ? Math.max(max, d.level) : max, 0);
 
+      let spellSlotValue = this.actor.system.spells[this.config.spell?.slot]?.value ? this.config.spell.slot : null;
       const spellSlotOptions = Object.entries(this.actor.system.spells).map(([value, slot]) => {
         if ( (slot.level < minimumLevel) || (slot.level > maximumLevel) || !slot.type ) return null;
         let label;
@@ -332,13 +337,16 @@ export default class ActivityUsageDialog extends Dialog5e {
         } else {
           label = game.i18n.format(`DND5E.SpellLevel${slot.type.capitalize()}`, { level: slot.level, n: slot.value });
         }
-        return { value, label, disabled: (slot.value === 0) && this.config.consume?.spellSlot };
+        // Set current value if applicable.
+        const disabled = (slot.value === 0) && this.config.consume?.spellSlot;
+        if ( !disabled && !spellSlotValue ) spellSlotValue = value;
+        return { value, label, disabled, selected: spellSlotValue === value };
       }).filter(o => o);
 
       if ( spellSlotOptions ) context.spellSlots = {
         field: new StringField({ label: game.i18n.localize("DND5E.SpellCastUpcast") }),
         name: "spell.slot",
-        value: this.config.spell?.slot,
+        value: spellSlotValue,
         options: spellSlotOptions
       };
 
@@ -352,14 +360,15 @@ export default class ActivityUsageDialog extends Dialog5e {
     else if ( this.activity.consumption.scaling.allowed && (this.config.scaling !== false) ) {
       const scale = this.activity.consumption.scaling;
       const max = scale.max ? simplifyBonus(scale.max, this.activity.getRollData({ deterministic: true })) : Infinity;
-      context.scaling = {
-        field: new NumberField({ min: 1, max: max, label: game.i18n.localize("DND5E.ScalingValue") }),
+      if ( max > 1 ) context.scaling = {
+        field: new NumberField({ min: 1, max, label: game.i18n.localize("DND5E.ScalingValue") }),
         name: "scalingValue",
         // Config stores the scaling increase, but scaling value (increase + 1) is easier to understand in the UI
         value: Math.clamp((this.config.scaling ?? 0) + 1, 1, max),
         max,
         showRange: max <= 20
       };
+      else context.hasScaling = false;
     }
 
     else {
